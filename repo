@@ -90,11 +90,11 @@ push)
         echo "No git repository"
     else
         git add .
-        if [[ -z $1 ]]; then
+        if [[ -z $2 ]]; then
             m="Auto - Commit on $(date +"%c")
         $(git status -s)"
         else
-            m=$1
+            m=$2
         fi
         git commit -m "$m"
         git push
