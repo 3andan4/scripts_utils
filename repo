@@ -9,7 +9,7 @@ if [[ ! -d /home/delivery ]]; then
     echo "NO DELIVERY in HOME - RUN INSTALL ?"
     echo -n "Proceed? [y for yes, else for no]: "
     read ans
-    if [[ ans == "y" ]]; then
+    if [[ $ans == "y" ]]; then
         sudo mkdir /home/delivery
         sudo chown $current_user /home/delivery
         cd /home/delivery
@@ -23,7 +23,7 @@ NAN)
     echo "Currently in $(pwd) -- Init a git directory ?"
     echo -n "Proceed? [y for yes, else for no]: "
     read ans
-    if [[ ans == "y" ]]; then
+    if [[ $ans == "y" ]]; then
         CHECK1=$([[ -d "./lib" ]] && echo "1" || echo "0")
         CHECK2=$([[ -d "./include" ]] && echo "1" || echo "0")
         cp -r /home/delivery/_template/lib/ ./
@@ -46,7 +46,7 @@ renew)
 update)
     CHECK1=$([[ -d "./lib" ]] && [[ -d "./include" ]] && echo "1" || echo "0")
     CHECK2=$([[ -d "/home/delivery/_template/" ]] && echo "1" || echo "0")
-    if [[ CHECK1 == 1 && CHECK2 == 1 ]]; then
+    if [[ $CHECK1 == 1 && $CHECK2 == 1 ]]; then
         [[ ! -d "/home/delivery/.archive/" ]] && mkdir "/home/delivery/.archive/"
         ARCHIVE_NO=$(ls -1 /home/delivery/.archive/ | wc -l)
         tar czf ./.archive/archive_template_$ARCHIVE_NO.tar.gz ./_template/
@@ -65,7 +65,7 @@ update)
     ;;
 make)
     CHECK1=$([[ -d "./lib" ]] && [[ -d "./include" ]] && echo "1" || echo "0")
-    if [[ CHECK1 == 1 ]]; then
+    if [[ $CHECK1 == 1 ]]; then
         if [[ ! -d "/home/delivery/_template/" ]]; then
             mkdir "/home/delivery/_template/"
             cp -r ./lib /home/delivery/_template/
@@ -88,7 +88,7 @@ help)
     echo "version - Display current version"
     echo "default* - Init a git repo and import your library from a template"
     ;;
--p|push)
+-p | push)
     if [[ ! -d ".git" ]]; then
         echo "No git repository"
     else
