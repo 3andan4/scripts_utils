@@ -29,3 +29,4 @@ complete -F repo_complete repo' >> ~/.bash_completion.d/repo
 
 . ~/.bash_completion
 
+rm $0
