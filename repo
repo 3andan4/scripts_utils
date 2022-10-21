@@ -84,8 +84,8 @@ help)
     echo "update - archive current template and use local lib as template"
     echo "renew - clean current directory and fetch template library"
     echo "make - Make a new library with current directory files"
-    echo "push - Push current git data to github (with commit message)"
-    echo "--version - Display current version"
+    echo "push/-p - Push current git data to github (with commit message)"
+    echo "version - Display current version"
     echo "default* - Init a git repo and import your library from a template"
     ;;
 -p|push)
