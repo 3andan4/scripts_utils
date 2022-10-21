@@ -65,7 +65,7 @@ case "$OPT" in
     ;;
     make)
         CHECK1=$([[ -d "./lib" ]] && [[ -d "./include" ]] && echo "1" || echo "0")
-        if [[ CHECK1 == 1 && ]]; then
+        if [[ CHECK1 == 1 ]]; then
             if [[ ! -d "/home/delivery/_template/" ]]; then
                 mkdir "/home/delivery/_template/"
                 cp -r ./lib /home/delivery/_template/

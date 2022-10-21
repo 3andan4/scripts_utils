@@ -1,0 +1,31 @@
+#!/bin/bash
+
+curl https://raw.githubusercontent.com/3andan4/scripts_utils/master/code_push --output code_push
+curl https://raw.githubusercontent.com/3andan4/scripts_utils/master/repo ----output repo
+
+chmod +x code_push
+chmod +x repo
+
+mv ./repo /usr/bin/repo
+mv ./code_push /usr/bin/code_push
+
+echo "for bcfile in ~/.bash_completion.d/* ; do
+  . $bcfile
+done" >> ~/.bash_completion
+
+mkdir ~/.bash_completion.d
+
+echo 'repo_complete () {
+    local cur prev opts
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    words="renew update make help"
+
+    COMPREPLY=( $(compgen -W "${words}" -- ${cur}) )
+    return 0
+}
+complete -F repo_complete repo' >> ~/.bash_completion.d/repo
+
+. ~/.bash_completion
+
