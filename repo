@@ -1,0 +1,93 @@
+#!/bin/bash
+
+OPT=$([[ -z $1 ]] && echo "NAN" || echo "$1")
+CURRENT_PWD=$(pwd)
+current_user=$USER
+
+if [[ ! -d /home/delivery ]]; then
+    echo "NO DELIVERY in HOME - RUN INSTALL ?"
+    echo -n "Proceed? [y for yes, else for no]: "
+    read ans
+    if [[ ans == "y" ]]; then
+        sudo mkdir /home/delivery
+        sudo chown $current_user /home/delivery
+        cd /home/delivery
+    else
+        return
+    fi
+fi
+
+
+case "$OPT" in
+    NAN)
+        echo "Currently in $(pwd) -- Init a git directory ?"
+        echo -n "Proceed? [y for yes, else for no]: "
+        read ans
+        if [[ ans == "y" ]]; then
+            CHECK1=$([[ -d "./lib" ]] && echo "1" || echo "0")
+            CHECK2=$([[ -d "./include" ]] && echo "1" || echo "0")
+            cp -r /home/delivery/_template/lib/ ./
+            cp -r /home/delivery/_template/include/ ./
+            cp /home/delivery/_template/.gitignore ./
+            [[ ! -d ".git" ]] && git init && echo "Don't forget to add remote branch" || echo "Git repo already exist here."
+        fi
+    ;;
+    renew)
+        if [[ -d "./lib" && -d "./include" ]]; then
+            rm -rf ./lib ./include
+            rm ./.gitignore
+            cp -r /home/delivery/_template/lib/ ./
+            cp -r /home/delivery/_template/include/ ./
+            cp /home/delivery/_template/.gitignore ./
+        else
+            echo "Nothing to renew"
+        fi
+    ;;
+    update)
+        CHECK1=$([[ -d "./lib" ]] && [[ -d "./include" ]] && echo "1" || echo "0")
+        CHECK2=$( [[ -d "/home/delivery/_template/" ]]&& echo "1" || echo "0")
+        if [[ CHECK1 == 1 && CHECK2 == 1 ]]; then
+            [[ ! -d "/home/delivery/.archive/" ]] && mkdir "/home/delivery/.archive/"
+            ARCHIVE_NO=$(ls -1 /home/delivery/.archive/ | wc -l)
+            tar czf ./.archive/archive_template_$ARCHIVE_NO.tar.gz ./_template/
+            rm -rf /home/delivery/_template/lib/
+            rm -rf /home/delivery/_template/include/
+            rm /home/delivery/_template/.gitignore
+            [[ ! -d "/home/delivery/_template/" ]] && mkdir "/home/delivery/_template/"
+            cp -r ./lib /home/delivery/_template/
+            cp -r ./include/ /home/delivery/_template/
+            cp ./.gitignore /home/delivery/_template/
+            echo "Template was updated. Old template was archived."
+        else
+            echo "No lib or no template folder. Can't update template."
+            echo "Did you want to make a template ?"
+        fi
+    ;;
+    make)
+        CHECK1=$([[ -d "./lib" ]] && [[ -d "./include" ]] && echo "1" || echo "0")
+        if [[ CHECK1 == 1 && ]]; then
+            if [[ ! -d "/home/delivery/_template/" ]]; then
+                mkdir "/home/delivery/_template/"
+                cp -r ./lib /home/delivery/_template/
+                cp -r ./include/ /home/delivery/_template/
+                cp ./.gitignore /home/delivery/_template/
+                echo "Template was created. You can now import it, build it."
+            else
+                echo "You already have a template. You can update it."
+            fi
+        else
+            echo "No lib or no include. Can't create template."
+            echo "You must use an existing library."
+        fi
+    ;;
+    help)
+        echo "update - archive current template and use local lib as template"
+        echo "renew - clean current directory and fetch template library"
+        echo "make - Make a new library with current directory files"
+        echo "default* - Init a git repo and import your library from a template"
+    ;;
+    *)
+        echo "Unknown Command - type help"
+    ;;
+esac
+
