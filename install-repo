@@ -7,22 +7,23 @@ else
   if [[ -z $1 ]]; then
     echo "Add your username when calling the function"
   else
-    cu=$1
+    if id "$1" &>/dev/null; then
+      cu=$1
 
-    curl https://raw.githubusercontent.com/3andan4/scripts_utils/master/repo --output repo
+      curl https://raw.githubusercontent.com/3andan4/scripts_utils/master/repo --output repo
 
-    chmod +x repo
+      chmod +x repo
 
-    mv ./repo /usr/bin/repo
+      mv ./repo /usr/bin/repo
 
-    echo 'for bcfile in ~/.bash_completion.d/* ; do
+      echo 'for bcfile in ~/.bash_completion.d/* ; do
   . $bcfile
 done' >/home/$cu/.bash_completion
 
-    rm -rf /home/$cu/.bash_completion.d
-    [[ ! -d /home/$cu/.bash_completion.d ]] && mkdir /home/$cu/.bash_completion.d
+      rm -rf /home/$cu/.bash_completion.d
+      [[ ! -d /home/$cu/.bash_completion.d ]] && mkdir /home/$cu/.bash_completion.d
 
-    echo 'repo_complete() {
+      echo 'repo_complete() {
     local cur prev opts
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
@@ -34,10 +35,14 @@ done' >/home/$cu/.bash_completion
 }
 complete -F repo_complete repo' >/home/$cu/.bash_completion.d/repo
 
-    . /home/$cu/.bash_completion
+      . /home/$cu/.bash_completion
 
-    echo "Auto completion won't work on non-bash"
-    echo "Reload your terminal"
-    rm $0
+      echo "Auto completion won't work on non-bash"
+      echo "Reload your terminal"
+      rm $0
+    else
+      echo 'user not found'
+    fi
+
   fi
 fi
