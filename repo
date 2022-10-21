@@ -3,6 +3,7 @@
 OPT=$([[ -z $1 ]] && echo "NAN" || echo "$1")
 CURRENT_PWD=$(pwd)
 current_user=$USER
+VERSION="0.0.1"
 
 if [[ ! -d /home/delivery ]]; then
     echo "NO DELIVERY in HOME - RUN INSTALL ?"
@@ -85,7 +86,7 @@ help)
     echo "make - Make a new library with current directory files"
     echo "default* - Init a git repo and import your library from a template"
     ;;
-push)
+-p|push)
     if [[ ! -d ".git" ]]; then
         echo "No git repository"
     else
@@ -99,6 +100,12 @@ push)
         git commit -m "$m"
         git push
     fi
+    ;;
+-v | --version)
+    echo $VERSION
+    ;;
+-fupg | --fetch-upgrade)
+    echo $VERSION
     ;;
 *)
     echo "Unknown Command - type help"

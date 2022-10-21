@@ -1,5 +1,9 @@
 #!/bin/bash
 
+cu=$USER
+
+sudo -s
+
 curl https://raw.githubusercontent.com/3andan4/scripts_utils/master/repo --output repo
 
 chmod +x repo
@@ -8,9 +12,9 @@ mv ./repo /usr/bin/repo
 
 echo 'for bcfile in ~/.bash_completion.d/* ; do
   . $bcfile
-done' >> ~/.bash_completion
+done' >> /home/$cu/.bash_completion
 
-mkdir ~/.bash_completion.d
+mkdir /home/$cu/.bash_completion.d
 
 echo 'repo_complete() {
     local cur prev opts
@@ -22,9 +26,11 @@ echo 'repo_complete() {
     COMPREPLY=( $(compgen -W "${words}" -- ${cur}) )
     return 0
 }
-complete -F repo_complete repo' > ~/.bash_completion.d/repo
+complete -F repo_complete repo' > /home/$cu/.bash_completion.d/repo
 
-. ~/.bash_completion
+. /home/$cu/.bash_completion
 
 echo "Auto completion won't work on non-bash"
 rm $0
+
+su $cu
