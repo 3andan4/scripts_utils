@@ -1,2 +1,10 @@
 #!/bin/bash
 
+git add .
+if [[ -z $1 ]]; then
+    m="Auto - Commit $(date +"%d_%h") -- $(git status -s)"
+    else
+    m=$1
+fi
+git commit -m "$m"
+git push
