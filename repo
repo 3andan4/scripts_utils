@@ -49,7 +49,7 @@ update)
     if [[ $CHECK1 == 1 && $CHECK2 == 1 ]]; then
         [[ ! -d "/home/delivery/.archive/" ]] && mkdir "/home/delivery/.archive/"
         ARCHIVE_NO=$(ls -1 /home/delivery/.archive/ | wc -l)
-        tar czvf ./.archive/archive_template_$ARCHIVE_NO.tar.gz /home/delivery/_template
+        tar -cpvzf /home/delivery/.archive/archive_template_$ARCHIVE_NO.tar.gz /home/delivery/_template
         rm -rf /home/delivery/_template/lib/
         rm -rf /home/delivery/_template/include/
         rm /home/delivery/_template/.gitignore
