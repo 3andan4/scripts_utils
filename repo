@@ -2,7 +2,6 @@
 
 OPT=$([[ -z $1 ]] && echo "NAN" || echo "$1")
 CURRENT_PWD=$(pwd)
-current_user=$USER
 VERSION="0.0.1"
 
 if [[ ! -d /home/delivery ]]; then
@@ -10,11 +9,25 @@ if [[ ! -d /home/delivery ]]; then
     echo -n "Proceed? [y for yes, else for no]: "
     read ans
     if [[ $ans == "y" ]]; then
-        sudo mkdir /home/delivery
-        sudo chown $current_user /home/delivery
-        cd /home/delivery
+        if [ "$EUID" -ne 0 ]; then
+            echo "Initialisation won't work as non root"
+            exit
+        else
+            echo "Input your username:"
+            read username
+            if id "$username" &>/dev/null; then
+                sudo -s
+                sudo mkdir /home/delivery
+                sudo chown $username /home/delivery
+                cd /home/delivery
+                echo "Work Done"
+            else
+                echo "This username is not working"
+            fi
+        fi
+
     else
-        return
+        exit
     fi
 fi
 
@@ -105,6 +118,38 @@ help)
     ;;
 -v | --version)
     echo $VERSION
+    ;;
+migrate)
+    echo "Migrate will move your current files and folders to the /home/delivery folder."
+    echo "Current directory will be empty"
+    echo "Any directory with the same name will be merged and files overwritten"
+    echo "If you wish to proceed, please type BANANA without A 3 times, without space"
+    read ans
+    if [[ $ans == "BNNBNNBNN" ]]; then
+        echo "Checking permission ..."
+        if [ "$EUID" -ne 0 ]; then
+            echo "Migrate won't work as non root"
+            exit
+        else
+            echo "Input your username:"
+            read username
+            if id "$username" &>/dev/null; then
+                sudo -s
+
+                dir_name=$(pwd | awk -F '/' '{print $NF}')
+                [[ ! -d "/home/delivery/$dir_name" ]] && mkdir "/home/delivery/$dir_name"
+                mv -f ./* /home/delivery/$dir_name/
+                mv -f ./.* /home/delivery/$dir_name/
+                chown $username /home/delivery/$dir_name
+                echo "Work Done"
+            else
+                echo "This username is not working"
+            fi
+        fi
+    else
+        else
+        echo "You didn't type what was expected."
+    fi
     ;;
 *)
     echo "Unknown Command - type help"

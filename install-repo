@@ -28,7 +28,7 @@ done' >/home/$cu/.bash_completion
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
-    words="renew update make help push -p version"
+    words="renew update make help push -p version migrate"
 
     COMPREPLY=( $(compgen -W "${words}" -- ${cur}) )
     return 0
@@ -40,6 +40,8 @@ complete -F repo_complete repo' >/home/$cu/.bash_completion.d/repo
       echo "Auto completion won't work on non-bash"
       echo "Reload your terminal"
       rm $0
+      chown $cu /home/$cu/.bash_completion.d/*
+      chown $cu /home/$cu/.bash_completion.d/
     else
       echo 'user not found'
     fi
